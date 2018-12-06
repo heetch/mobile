@@ -168,10 +168,8 @@ func (g *ObjcGen) GenH() error {
 	}
 	for _, i := range g.interfaces {
 		g.Printf("@protocol %s%s;\n", g.namePrefix, i.obj.Name())
-		if i.summary.implementable {
-			g.Printf("@class %s%s;\n", g.namePrefix, i.obj.Name())
-			// Forward declaration for other cases will be handled at the beginning of GenM.
-		}
+        g.Printf("@class %s%s;\n", g.namePrefix, i.obj.Name())
+        // Forward declaration for other cases will be handled at the beginning of GenM.
 	}
 	if len(g.structs) > 0 || len(g.interfaces) > 0 {
 		g.Printf("\n")
