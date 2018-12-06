@@ -227,14 +227,6 @@ func (g *ObjcGen) GenH() error {
 		g.Printf("\n")
 	}
 
-	for _, i := range g.interfaces {
-		if i.summary.implementable {
-			// @interface Interface -- similar to what genStructH does.
-			g.genInterfaceInterface(i.obj, i.summary, true)
-			g.Printf("\n")
-		}
-	}
-
 	g.Printf("#endif\n")
 
 	if len(g.err) > 0 {
@@ -885,14 +877,15 @@ func (g *ObjcGen) genInterfaceInterface(obj *types.TypeName, summary ifaceSummar
 	g.Printf("@end\n")
 }
 
-func (g *ObjcGen) genInterfaceH(obj *types.TypeName, t *types.Interface) {
-	summary := makeIfaceSummary(t)
+func (g *ObjcGen) genInterfaceH(obj *types.TypeName, summary ifaceSummary) {
+	g.genInterfaceInterface(obj, summary, summary.implementable)
+	g.Printf("\n")
 	if !summary.implementable {
-		g.genInterfaceInterface(obj, summary, false)
 		return
 	}
+
 	g.Printf("@protocol %s%s <NSObject>\n", g.namePrefix, obj.Name())
-	for _, m := range makeIfaceSummary(t).callable {
+	for _, m := range summary.callable {
 		if !g.isSigSupported(m.Type()) {
 			g.Printf("// skipped method %s.%s with unsupported parameter or return types\n\n", obj.Name(), m.Name())
 			continue
