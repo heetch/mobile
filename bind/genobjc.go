@@ -229,11 +229,6 @@ func (g *ObjcGen) GenH() error {
 
 	for _, i := range g.interfaces {
 		if i.summary.implementable {
-			g.Printf("@class %s%s;\n\n", g.namePrefix, i.obj.Name())
-		}
-	}
-	for _, i := range g.interfaces {
-		if i.summary.implementable {
 			// @interface Interface -- similar to what genStructH does.
 			g.genInterfaceInterface(i.obj, i.summary, true)
 			g.Printf("\n")
